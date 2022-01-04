@@ -5,6 +5,7 @@ import React, {
   createContext,
   useMemo,
   useContext,
+  useEffect,
 } from 'react';
 import mojs from 'mo-js';
 
@@ -104,7 +105,7 @@ const useClapAnimation = ({ clapElement, countElement, totalElement }) => {
 const MediumClapContext = createContext();
 const { Provider } = MediumClapContext;
 
-const MediumClap = ({ children }) => {
+const MediumClap = ({ children, onClap }) => {
   const MAXIMUM_USER_CLAP = 50;
   const [clapState, clapStateSet] = useState(initialState);
 
@@ -137,6 +138,10 @@ const MediumClap = ({ children }) => {
     () => ({ ...clapState, setRef }),
     [clapState, setRef]
   );
+
+  useEffect(() => {
+    onClap && onClap(clapState);
+  }, [clapState.count]);
 
   return (
     <Provider value={memoizedValue}>
@@ -194,12 +199,21 @@ MediumClap.Count = Count;
 MediumClap.Total = Total;
 
 const Usage = () => {
+  const [count, countSet] = useState(0);
+
+  const handleClap = (clapState) => {
+    countSet(clapState.count);
+  };
+
   return (
-    <MediumClap>
-      <MediumClap.Icon />
-      <MediumClap.Count />
-      <MediumClap.Total />
-    </MediumClap>
+    <div style={{ width: '100%' }}>
+      <MediumClap onClap={handleClap}>
+        <MediumClap.Icon />
+        <MediumClap.Count />
+        <MediumClap.Total />
+      </MediumClap>
+      <div className={styles.info}>{`You have clapped ${count}`}</div>
+    </div>
   );
 };
 
