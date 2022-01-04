@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useContext,
   useEffect,
+  useRef,
 } from 'react';
 import mojs from 'mo-js';
 
@@ -110,7 +111,6 @@ const MediumClap = ({ children, onClap }) => {
   const [clapState, clapStateSet] = useState(initialState);
 
   const [{ clapRef, countRef, totalRef }, refsSet] = useState({});
-
   const setRef = useCallback((node) => {
     refsSet((prevState) => ({
       ...prevState,
@@ -123,7 +123,6 @@ const MediumClap = ({ children, onClap }) => {
     countElement: countRef,
     totalElement: totalRef,
   });
-
   const handleClapClick = () => {
     animationTimeline.replay();
 
@@ -134,14 +133,19 @@ const MediumClap = ({ children, onClap }) => {
     }));
   };
 
+  const componentJustMounted = useRef(true);
+  useEffect(() => {
+    if (!componentJustMounted.current) {
+      onClap && onClap(clapState);
+    } else {
+      componentJustMounted.current = false;
+    }
+  }, [clapState.count]);
+
   const memoizedValue = useMemo(
     () => ({ ...clapState, setRef }),
     [clapState, setRef]
   );
-
-  useEffect(() => {
-    onClap && onClap(clapState);
-  }, [clapState.count]);
 
   return (
     <Provider value={memoizedValue}>
@@ -212,7 +216,9 @@ const Usage = () => {
         <MediumClap.Count />
         <MediumClap.Total />
       </MediumClap>
-      <div className={styles.info}>{`You have clapped ${count}`}</div>
+      {!!count && (
+        <div className={styles.info}>{`You have clapped ${count} times!`}</div>
+      )}
     </div>
   );
 };
