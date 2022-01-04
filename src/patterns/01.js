@@ -109,9 +109,9 @@ const MediumClap = ({ animationTimeline }) => {
   const [clapState, clapStateSet] = useState(initialState);
   const { count, countTotal, isClicked } = clapState;
 
-  animationTimeline.replay();
-
   const handleClapClick = () => {
+    animationTimeline.replay();
+
     clapStateSet(({ count, countTotal }) => ({
       count: Math.min(count + 1, MAXIMUM_USER_CLAP),
       countTotal: count < MAXIMUM_USER_CLAP ? countTotal + 1 : countTotal,
