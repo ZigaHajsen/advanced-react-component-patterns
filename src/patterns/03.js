@@ -152,7 +152,7 @@ const MediumClap = ({ children }) => {
   );
 };
 
-const ClapIcon = () => {
+const Icon = () => {
   const { isClicked } = useContext(MediumClapContext);
 
   return (
@@ -169,7 +169,7 @@ const ClapIcon = () => {
   );
 };
 
-const ClapCount = () => {
+const Count = () => {
   const { count, setRef } = useContext(MediumClapContext);
 
   return (
@@ -179,7 +179,7 @@ const ClapCount = () => {
   );
 };
 
-const ClapTotal = () => {
+const Total = () => {
   const { countTotal, setRef } = useContext(MediumClapContext);
 
   return (
@@ -189,12 +189,16 @@ const ClapTotal = () => {
   );
 };
 
+MediumClap.Icon = Icon;
+MediumClap.Count = Count;
+MediumClap.Total = Total;
+
 const Usage = () => {
   return (
     <MediumClap>
-      <ClapIcon />
-      <ClapCount />
-      <ClapTotal />
+      <MediumClap.Icon />
+      <MediumClap.Count />
+      <MediumClap.Total />
     </MediumClap>
   );
 };
