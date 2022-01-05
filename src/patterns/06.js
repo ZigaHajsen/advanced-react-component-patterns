@@ -1,20 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import styles from './index.css';
 import { useClapAnimation } from './06/index';
 import { useDOMRef } from './06/useDOMRef';
-
-const initialState = {
-  count: 0,
-  countTotal: 0,
-  isClicked: false,
-};
+import { useClapState } from './06/useClapState';
 
 const MediumClap = () => {
-  const MAXIMUM_USER_CLAP = 50;
-  const [clapState, clapStateSet] = useState(initialState);
-  const { count, countTotal, isClicked } = clapState;
-
+  const [{ count, countTotal, isClicked }, clapStateUpdate] = useClapState();
   const [{ clapRef, countRef, totalRef }, setRef] = useDOMRef();
 
   const animationTimeline = useClapAnimation({
@@ -25,12 +17,7 @@ const MediumClap = () => {
 
   const handleClapClick = () => {
     animationTimeline.replay();
-
-    clapStateSet(({ count, countTotal }) => ({
-      count: Math.min(count + 1, MAXIMUM_USER_CLAP),
-      countTotal: count < MAXIMUM_USER_CLAP ? countTotal + 1 : countTotal,
-      isClicked: true,
-    }));
+    clapStateUpdate();
   };
 
   return (
