@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 
 import styles from './index.css';
 import { useClapAnimation } from './06/index';
+import { useDOMRef } from './06/useDOMRef';
 
 const initialState = {
   count: 0,
@@ -14,14 +15,7 @@ const MediumClap = () => {
   const [clapState, clapStateSet] = useState(initialState);
   const { count, countTotal, isClicked } = clapState;
 
-  const [{ clapRef, countRef, totalRef }, refsSet] = useState({});
-
-  const setRef = useCallback((node) => {
-    refsSet((prevState) => ({
-      ...prevState,
-      [node.dataset.refkey]: node,
-    }));
-  }, []);
+  const [{ clapRef, countRef, totalRef }, setRef] = useDOMRef();
 
   const animationTimeline = useClapAnimation({
     clapElement: clapRef,
