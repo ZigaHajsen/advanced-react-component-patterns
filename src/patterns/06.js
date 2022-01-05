@@ -1,31 +1,32 @@
 import React from 'react';
 
 import styles from './index.css';
-import { useClapAnimation } from './06/index';
-import { useDOMRef } from './06/useDOMRef';
-import { useClapState } from './06/useClapState';
+import {
+  useClapAnimation,
+  useDOMRef,
+  useClapState,
+  useEffectAfterMount,
+} from './06/index';
 
 const MediumClap = () => {
   const [{ count, countTotal, isClicked }, clapStateUpdate] = useClapState();
   const [{ clapRef, countRef, totalRef }, setRef] = useDOMRef();
-
   const animationTimeline = useClapAnimation({
     clapElement: clapRef,
     countElement: countRef,
     totalElement: totalRef,
   });
 
-  const handleClapClick = () => {
+  useEffectAfterMount(() => {
     animationTimeline.replay();
-    clapStateUpdate();
-  };
+  }, [count]);
 
   return (
     <button
       ref={setRef}
       data-refkey='clapRef'
       className={styles.clap}
-      onClick={handleClapClick}
+      onClick={() => clapStateUpdate()}
     >
       <ClapIcon isClicked={isClicked} />
       <ClapCount setRef={setRef} count={count} />
